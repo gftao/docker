@@ -1,0 +1,89 @@
+version: '3'
+services:
+  #apigateway:
+  #  image: apigateway:1.0.7
+  #  container_name: apigateway
+  #  ports:
+  #   - 8080:8080
+  #  environment:
+  #    LOG_LEVEL: debug
+  #    CONSUL_ADDR: consul:8500
+  #    ZIPKIN_ADDR: zipkin:9411
+  #  depends_on:
+  #   - consul
+  #   - zipkin
+  #userservice:
+  #  image: userservice:1.0.2
+  #  container_name: userservice
+  #  ports:
+  #   - 5000:5000
+  #  environment:
+  #    CONFIG_FILE: configs/dev.toml
+  #    LOG_LEVEL: debug #    ZIPKIN_ADDR: zipkin:9411
+  #  depends_on:
+  #   - redis
+  #   - consul
+  #   - zipkin
+  #  #command: ['sleep', '200000']
+  #  volumes:
+  #   - ./configs/userservice/:/data/configs
+  #swagger:
+  #  image: swaggerapi/swagger-ui:v3.22.1
+  #  container_name: swagger
+  #  ports:
+  #   - 8088:8080
+  #  environment:
+  #   - API_URL=http://172.16.7.120/static/userservice/docs/user.json
+  #redis:
+  #  image: redis:5.0.4
+  #  container_name: redis
+  #  ports:
+  #    - 6379:6379
+  #consul:
+  #  image: consul:1.4.4
+  #  container_name: consul
+  #  volumes:
+  #    - ./consul/consul.json:/consul/config/consul.json
+  #  ports:
+  #   - "53:8600"
+  #   - "53:8600/udp"
+  #   - "8300:8300"
+  #   - "8301:8301"
+  #   - "8302:8302"
+  #   - "8400:8400"
+  #   - "8500:8500"
+  #  command: "agent -server -bootstrap-expect 1 -ui -client 0.0.0.0 -enable-script-checks"
+  #nginx:
+  #  image: nginx:1.16
+  #  container_name: nginx
+  #  ports: 
+  #   - 80:80
+  #  environment:
+  #   - NGINX_PORT=80
+  #  volumes:
+  #   - ./nginx/conf/:/etc/nginx/
+  #   - ./app/:/app/
+  #zipkin:
+  #  image: openzipkin/zipkin:2.12.8
+  #  container_name: zipkin
+  #  ports:
+  #   - 9411:9411
+  #camunda:
+  #  image: camunda/camunda-bpm-platform:latest
+  #  container_name: camunda
+  #  ports:
+  #    - 8000:8080
+  gitlab:
+    image: gitlab/gitlab-ce:latest
+    container_name: gitlab
+    ports:
+      - "8100:8100"
+      - "8022:22"
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'http://172.16.7.120:8100'
+        gitlab_rails['gitlab_shell_ssh_port'] = "8022"
+    volumes:
+    - './srv/gitlab/config:/etc/gitlab'
+    - './srv/gitlab/logs:/var/log/gitlab'
+    - './srv/gitlab/data:/var/opt/gitlab'
